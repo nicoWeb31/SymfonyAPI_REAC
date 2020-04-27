@@ -10,7 +10,10 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
- * @ApiResource()
+ * @ApiResource(
+ *itemOperations={"get"},
+ *collectionOperations={"get"}
+ * )
  */
 class BlogPost
 {

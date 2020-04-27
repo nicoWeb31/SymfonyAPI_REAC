@@ -6,10 +6,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
+//normalization contexet = proprieter que nous voulon srenvoyer a l'utilisateur
+
 /**
- * @ApiResource()
+ * @ApiResource(
+ * itemOperations={"get"},
+ * collectionOperations={"post"},
+ * normalizationContext={
+ * "groups"={"read"}
+ * }
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
@@ -18,11 +28,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read"})
      */
     private $username;
 
@@ -33,6 +45,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read"})
      */
     private $name;
 
@@ -43,6 +56,7 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost",mappedBy ="author")
+     * @Groups({"read"})
      * 
      */
     private $posts;
@@ -146,7 +160,7 @@ class User implements UserInterface
      *
      * @return  self
      */ 
-    public function setComments($comments)
+    public function setComments($comments):self
     {
         $this->comments = $comments;
 
