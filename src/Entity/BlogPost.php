@@ -2,10 +2,15 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
+ * @ApiResource()
  */
 class BlogPost
 {
@@ -32,7 +37,8 @@ class BlogPost
     private $content;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User",inversedBy = "posts"  )
+     * @Orm\JoinColumn(nullable=false)
      */
     private $author;
 
@@ -40,6 +46,17 @@ class BlogPost
      * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment",mappedBy="blogPost"  )
+     * @Orm\JoinColumn(nullable=false)
+     */
+    private $comments;
+
+    public function __construct(){
+        $this->comments = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -82,17 +99,6 @@ class BlogPost
         return $this;
     }
 
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
 
     /**
      * Get the value of slug
@@ -110,6 +116,46 @@ class BlogPost
     public function setSlug($slug)
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */ 
+    public function getAuthor():User
+    {
+        return $this->author;
+    }
+
+    /**
+     * Set the value of author
+     *
+     * @param User $author
+     */ 
+    public function setAuthor(User $author):self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of comments
+     */ 
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Set the value of comments
+     *
+     * @return  self
+     */ 
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
 
         return $this;
     }
